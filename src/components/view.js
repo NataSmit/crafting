@@ -93,15 +93,17 @@ export default class View extends EventEmitter{
 
 
   handleCraftBtn() {
-    const recipeId = this.tableRecipe.childNodes[0].id
-    console.log(this.tableRecipe.childNodes[0])
-    const ingredients = Array.from(this.tableItems.childNodes)
-    console.log('ingredients', ingredients)
-    const ingredientsNames = ingredients.map(i => i.getAttribute('name'))
-    console.log('ingredients', ingredientsNames)
-   // вызвать isEqualToRecipe(recipeId, itemsArr) из модели
+    const recipeNode = this.tableRecipe.childNodes
+    if (recipeNode.length !== 0) {
+      const recipeId = this.tableRecipe.childNodes[0].id
+      const ingredients = Array.from(this.tableItems.childNodes)
+      const ingredientsNames = ingredients.map(i => i.getAttribute('name'))
+      // вызвать isEqualToRecipe(recipeId, itemsArr) из модели
+      this.emit('craft', {recipeId, ingredientsNames})
+    } else {
+      alert("Выберите рецепт")
+    }
     
-   this.emit('craft', {recipeId, ingredientsNames})
   }
 
   removeRecipe() {
