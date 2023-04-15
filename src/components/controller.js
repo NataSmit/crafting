@@ -6,6 +6,8 @@ export default class Controller {
     
     
     view.on('craft', this.craft.bind(this))
+    view.on('createRecipe', this.createRecipe.bind(this))
+    view.on('dropRecipe', this.dropRecipe.bind(this))
   }
 
   craft({recipeId, ingredientsNames}) {
@@ -15,15 +17,24 @@ export default class Controller {
     if(result) {
       this.model.addToResult(recipeObj)
       console.log('this.model.resultList', this.model.resultList)
-      this.view.addToResult(this.model.resultList)
+      this.view.addToResult(recipeObj)
       this.view.removeRecipe()
       this.view.removeIngredients()
     } else {
-      alert("Ингредиенты выбраны не верно")
+      alert("составные части выбраны не верно/не полностью")
     }
   }
 
+  createRecipe({newRecipe, newIngredients}) {
+    this.model.addToRecipeList(newRecipe)
+    this.view.addItem(newRecipe, this.view.recipeListContainer)
+    this.view.renderItems(newIngredients, this.view.itemList)
+  }
 
+  dropRecipe(recipeId) {
+    const res = this.model.isPresentInRecipeList(recipeId)
+    console.log('res', res)
+  }
 
 
 }

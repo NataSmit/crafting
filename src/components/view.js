@@ -4,19 +4,25 @@ export default class View extends EventEmitter{
   constructor() {
     super();
     this.table = document.querySelector('.table');
-    this.result = document.querySelector('.result');
+    this.result = document.querySelector('.result__list');
+    this.recipeListContainer = document.querySelector('.recipe__list')
     this.itemList = document.querySelector('.items__list')
-    this.tableItems = document.querySelector('.table__items')
-    this.tableRecipe = document.querySelector('.table__recipe')
+    this.tableItems = document.querySelector('.table__items-list') //'.table__items'
+    this.tableRecipe = document.querySelector( '.table__recipe-list' ) //'.table__recipe'
     this.craftBtn = document.querySelector('.table__button')
+    this.form = document.querySelector('.newRecipe__form')
 
     this.tableItems.addEventListener('dragover', this.dragover)
-    this.tableItems.addEventListener('drop', this.drop)
+    this.tableItems.addEventListener('drop', this.dropIngredients)
+
+    this.itemList.addEventListener('dragover', this.dragover)
+    this.itemList.addEventListener('drop', this.dropIngredients)
 
     this.tableRecipe.addEventListener('dragover', this.dragover)
-    this.tableRecipe.addEventListener('drop', this.drop)
+    this.tableRecipe.addEventListener('drop', this.dropRecipe.bind(this))
 
     this.craftBtn.addEventListener('click', this.handleCraftBtn.bind(this))
+    this.form.addEventListener('submit', this.handleFormSubmit.bind(this))
 
   }
 
@@ -39,23 +45,45 @@ export default class View extends EventEmitter{
     });
   }
 
-  addToResult(itemArr) {
-    itemArr.forEach(element => {
-      this.addItem(element, this.result)
-    });
+  addToResult(createdItem) {
+    this.addItem(createdItem, this.result)
+    
   }
 
   drag(ev) {
-    const classText = ev.target.id
-    console.log('ev.target', classText)
-    
-    ev.dataTransfer.setData("text", classText);
+    const itemId = ev.target.id
+    ev.dataTransfer.setData("id", itemId);
   }
 
-  drop(ev) {
+  dropRecipe(ev) {
     ev.preventDefault();
-    const data = ev.dataTransfer.getData("text");
-    console.log('data', data)
+    const data = ev.dataTransfer.getData("id");
+    this.emit('dropRecipe', data)
+    console.log('ev.dataTransfer', ev.dataTransfer)
+    const checkResult = this.checkDroppedRecipe()
+    console.log('checkResult', checkResult)
+    console.log('document.getElementById(data)', document.getElementById(data))
+    if (checkResult) {
+      ev.target.appendChild(document.getElementById(data));
+    }
+    
+    
+  }
+
+  checkDroppedRecipe() {
+    const recipeList = this.tableRecipe.childNodes
+    if(recipeList.length) {
+      alert("Можно добавить только один рецепт")
+      return false
+    } else {
+      return true
+    }
+  }
+
+  dropIngredients(ev) {
+    ev.preventDefault();
+    const data = ev.dataTransfer.getData("id");
+    console.log('ev target', ev.target)
     ev.target.appendChild(document.getElementById(data));
   }
 
@@ -63,10 +91,12 @@ export default class View extends EventEmitter{
     e.preventDefault()
   }
 
+
   handleCraftBtn() {
     const recipeId = this.tableRecipe.childNodes[0].id
     console.log(this.tableRecipe.childNodes[0])
     const ingredients = Array.from(this.tableItems.childNodes)
+    console.log('ingredients', ingredients)
     const ingredientsNames = ingredients.map(i => i.getAttribute('name'))
     console.log('ingredients', ingredientsNames)
    // вызвать isEqualToRecipe(recipeId, itemsArr) из модели
@@ -86,6 +116,49 @@ export default class View extends EventEmitter{
     })
   }
 
+  removeValues(arr, nameInput) {
+    const newArr = [...arr, nameInput]
+    newArr.forEach((input) => {
+      input.value = ''
+    })
+
+  }
+
+  handleFormSubmit(e) {
+    e.preventDefault()
+    const nameInput = document.querySelector('.name')
+    console.log('nameInput', nameInput)
+    const name = nameInput.value
+    console.log('name', name)
+    const inputList = Array.from(document.querySelectorAll('.ingredient'))
+    console.log('inputList', inputList)
+    const valueList = inputList.map(input => input.value)
+    console.log('valueList', valueList)
+    const correctValueList = valueList.filter(v => Boolean(v))
+    console.log('correctValueList', correctValueList)
+    const newIngredients = correctValueList.map((ing) => ({id: Date.now() + Math.random(), name: ing}))
+    
+    const ingredientsObj = correctValueList.reduce((obj, cur, i) => {
+      let key = i + 1
+      obj[key] = cur
+      return obj
+    }, {})
+
+    
+    const newRecipe = {
+      name,
+      id: Date.now() + Math.random(),
+      ingredients: {...ingredientsObj}
+    }
+
+    console.log('newIngredients', newIngredients)
+    this.emit('createRecipe', {newRecipe, newIngredients})
+    this.removeValues(inputList, nameInput)
+    
+  }
+
+
+  
 
 
 }

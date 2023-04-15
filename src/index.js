@@ -3,6 +3,7 @@ import './index.css'
 import View from './components/view'
 import Model from './components/model'
 import Controller from './components/controller';
+import Validator from './components/validator';
 const itemListContainer = document.querySelector('.items__list')
 const recipeListContainer = document.querySelector('.recipe__list')
 
@@ -39,4 +40,13 @@ view.renderItems(initialRecipes, recipeListContainer)
 const model = new Model(initialItems, initialRecipes)
 //console.log('model', model)
 const controller = new Controller(model, view)
+
+//view.getInputValues()
+
+const validator = new Validator()
+//validator.checkValues()
+
+
+
+
 

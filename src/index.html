@@ -9,32 +9,40 @@
 <body class="root">
   <main class="main">
     <div class="items">
+      <h2 class="items__title title">Составные части</h2>
       <ul class="list items__list">
-        <li class="item items__object">Колеса</li>
-        <li class="item items__object">Кабина</li>
-        <li class="item items__object">Руль</li>
-      </ul>
-    </div>
-    <div class="recipe">
-      <ul class="list recipe__list">
-        <li class="item recipe__item">Машина</li>
         
       </ul>
     </div>
+    <div class="recipe">
+      <h2 class="recipe__title title">Рецепт</h2>
+      <ul class="list recipe__list">
+      </ul>
+    </div>
     <div class="table">
-      <div class="table__recipe"></div>
-      <div class="table__items"></div>
+      <div class="table__recipe">
+        <h2 class="table__title title">Область для рецепта</h2>
+        <ul class="table__recipe-list"></ul>
+      </div>
+      <div class="table__items">
+        <h2 class="table__title title">Область для составных частей</h2>
+        <ul class="table__items-list"></ul>
+      </div>
       <button class="table__button">Создать</button>
     </div>
-    <div class="result"></div>
+    <div class="result">
+      <h2 class="result__title title">Результат</h2>
+      <ul class="result__list"></ul>
+    </div>
     <div class="newRecipe">
+      <h2 class="newRecipe__title title">Создать рецепт</h2>
       <form class="createRecipe newRecipe__form" action="">
-        <input class="createRecipe__input" type="text" placeholder="Название предмета">
-        <input class="createRecipe__input" type="text" placeholder="Составная часть">
-        <input class="createRecipe__input" type="text" placeholder="Составная часть">
-        <input class="createRecipe__input" type="text" placeholder="Составная часть">
-        <input class="createRecipe__input" type="text" placeholder="Составная часть">
-        <input class="createRecipe__input" type="text" placeholder="Составная часть">
+        <input class="createRecipe__input name" type="text" placeholder="Название предмета" required>
+        <input class="createRecipe__input ingredient" type="text" placeholder="Составная часть" required>
+        <input class="createRecipe__input ingredient" type="text" placeholder="Составная часть" required>
+        <input class="createRecipe__input ingredient" type="text" placeholder="Составная часть">
+        <input class="createRecipe__input ingredient" type="text" placeholder="Составная часть">
+        <input class="createRecipe__input ingredient" type="text" placeholder="Составная часть">
         <button class="createRecipe__btn">Добавить рецепт</button>
       </form>
     </div>

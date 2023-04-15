@@ -35,7 +35,7 @@ body {
   grid-template-areas:
   "items recipe recipe recipe recipe recipe"
   "items table table table result result"
-  "items table table table newRecipe newRecipe"
+  "items table table table result result"
   "items table table table newRecipe newRecipe"
   "items table table table newRecipe newRecipe";
   
@@ -46,11 +46,15 @@ body {
 .items {
   grid-area: items;
   border: 2px solid black;
+  text-align: center;
+  overflow: auto;
 }
 
 .recipe {
   grid-area: recipe;
   border: 2px solid black;
+  padding: 5px;
+  text-align: center;
 }
 
 .table {
@@ -65,12 +69,15 @@ body {
 .result {
   grid-area: result;
   border: 2px solid black;
+  padding: 5px;
+  text-align: center;
 }
 
 .newRecipe {
   grid-area: newRecipe;
   border: 2px solid black;
   padding: 5px;
+  text-align: center;
 }
 
 .list {
@@ -79,14 +86,26 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0;
 }
+
+.items__list {
+  min-height: 500px;
+}
+
+.recipe__list {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
 
 .item {
   border: 1px solid white;
   width: 100px;
   padding: 5px;
   text-align: center;
-  margin-bottom: 5px;
+  margin: 0 5px 5px 0;
+  background-color: rgb(116, 174, 211);
 }
 
 .table__recipe {
@@ -94,6 +113,7 @@ body {
   border: 1px solid blue;
   margin-bottom: 5px;
   width: 100%;
+  text-align: center;
 }
 
 .table__items {
@@ -101,23 +121,30 @@ body {
   border: 1px solid blue;
   width: 100%;
   margin-bottom: 40px;
+  text-align: center;
 }
 
 .table__button {
   display: block;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 5px;
   width: 200px;
   padding: 10px 0;
   font-size: 16px;
-  background-color: rgb(211, 185, 102);
+  background-color: rgb(21, 151, 54);
+  cursor: pointer;
+  transition: border .3s ease;
+}
+
+.table__button:hover {
+  border: 1px solid black;
 }
 
 .createRecipe {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 20px;
+  padding-top: 5px;
 }
 
 .createRecipe__input {
@@ -132,9 +159,45 @@ body {
 
 .createRecipe__btn {
   width: 250px;
-  margin-top: 20px;
-  padding: 10px;
-  border: none;
+  margin-top: 10px;
+  padding: 5px;
+  border: 1px solid transparent;
   border-radius: 5px;
   background-color: rgb(21, 151, 54);
+  cursor: pointer;
+  transition: border .3s ease;
 }
+
+.createRecipe__btn:hover {
+  border: 1px solid black;
+}
+
+.title {
+  font-size: 20px;
+  margin: 0 0 10px 0;
+}
+
+.table__recipe-list {
+  min-height: 50px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.table__items-list {
+  height: 100%;
+  list-style: none;
+}
+
+.result__list {
+  padding: 0;
+  height: 100%;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
