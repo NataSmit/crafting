@@ -1,47 +1,37 @@
 export default class Model {
-  constructor (itemList, recipeList, result=[]) {
+  constructor(itemList, recipeList, result = []) {
     this.itemList = itemList;
     this.recipeList = recipeList;
     this.resultList = result;
   }
 
   isEqualToRecipe(recipeId, ingredientsNames) {
-
-    //recipeObj будут ids, нужно достать obj
-    console.log('model', recipeId, ingredientsNames)
-    const recipeObj = this.recipeList.find(recipe => recipe.id == recipeId)
+    const recipeObj = this.recipeList.find(
+      (recipe) => String(recipe.id) === String(recipeId),
+    );
     if (recipeObj) {
-      const correctIngredients = Object.values(recipeObj.ingredients)
-      console.log('correctIngredients', correctIngredients)
-      const comparedArr = correctIngredients.filter(i => ingredientsNames.includes(i))
-      console.log('comparedArr', comparedArr, comparedArr.length)
-      const result = comparedArr.length === correctIngredients.length
-      console.log('result model', result)
-      return {result, recipeObj}
-    } else {
-      alert('Добавлен не верный рецепт')
-      return false
+      const correctIngredients = Object.values(recipeObj.ingredients);
+      const comparedArr = correctIngredients.filter((i) => ingredientsNames.includes(i));
+      const result = comparedArr.length === correctIngredients.length;
+      return { result, recipeObj };
     }
-    
+    alert('Добавлен неверный рецепт');
+    return false;
   }
 
   addToResult(item) {
-    this.resultList.push(item)
+    this.resultList.push(item);
   }
 
   addToRecipeList(recipe) {
-    this.recipeList.push(recipe)
+    this.recipeList.push(recipe);
+  }
+
+  addToItemList(itemsArr) {
+    this.itemList = [...this.itemList, ...itemsArr];
   }
 
   createRecipe(recipe) {
-    this.recipeList.push(recipe)
-    console.log('this.recipeList', this.recipeList)
+    this.recipeList.push(recipe);
   }
-
-  isPresentInRecipeList(recipeId) {
-   return this.recipeList.find(recipe => recipe.id == recipeId)
-  }
-
-
-
 }

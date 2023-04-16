@@ -5,12 +5,12 @@ export default class EventEmitter {
 
   on(type, callback) {
     this.events[type] = this.events[type] || [];
-    this.events[type].push(callback)
+    this.events[type].push(callback);
   }
 
   emit(type, arg) {
     if (this.events[type]) {
-      this.events[type].forEach(callback => callback(arg))
+      this.events[type].forEach((callback) => callback(arg));
     }
   }
 }

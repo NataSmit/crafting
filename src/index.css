@@ -106,6 +106,7 @@ body {
   text-align: center;
   margin: 0 5px 5px 0;
   background-color: rgb(116, 174, 211);
+  cursor: grab;
 }
 
 .table__recipe {
@@ -120,7 +121,7 @@ body {
   height: 50%;
   border: 1px solid blue;
   width: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   text-align: center;
 }
 
@@ -188,7 +189,7 @@ body {
 }
 
 .table__items-list {
-  height: 100%;
+  min-height: 250px;
   list-style: none;
 }
 
@@ -199,5 +200,22 @@ body {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+}
+
+.table__reset-btn {
+  background-color: rgb(141, 55, 55);
+  margin-top: 20px;
+  display: block;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  width: 200px;
+  padding: 10px 0;
+  font-size: 16px;
+  cursor: pointer;
+  transition: border .3s ease;
+}
+
+.table__reset-btn:hover {
+  border: 1px solid black;
 }
 
