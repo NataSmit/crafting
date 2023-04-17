@@ -15,6 +15,7 @@ export default class Model {
       const result = comparedArr.length === correctIngredients.length;
       return { result, recipeObj };
     }
+    // eslint-disable-next-line no-alert
     alert('Добавлен неверный рецепт');
     return false;
   }

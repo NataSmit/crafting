@@ -10,16 +10,17 @@ export default class Controller {
   }
 
   craft({ recipeId, ingredientsNames }) {
-    console.log('craft', recipeId, ingredientsNames);
-    const { result, recipeObj } = this.model.isEqualToRecipe(recipeId, ingredientsNames);
-    console.log('controller', result, recipeObj);
+    const { result, recipeObj } = this.model.isEqualToRecipe(
+      recipeId,
+      ingredientsNames,
+    );
     if (result) {
       this.model.addToResult(recipeObj);
-      console.log('this.model.resultList', this.model.resultList);
       this.view.addToResult(recipeObj);
       this.view.removeRecipe();
       this.view.removeIngredients();
     } else {
+      // eslint-disable-next-line no-alert
       alert('составные части выбраны не верно/не полностью');
     }
   }
@@ -33,7 +34,10 @@ export default class Controller {
     const newIngredientsLS = [];
     newIngredientsLS.push(...newIngredients);
     if (ingredients && recipes) {
-      saveToLocalStorage([...recipes, newRecipe], [...ingredients, ...newIngredients]);
+      saveToLocalStorage(
+        [...recipes, newRecipe],
+        [...ingredients, ...newIngredients],
+      );
     } else {
       saveToLocalStorage([newRecipe], newIngredients);
     }

@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable class-methods-use-this */
 import EventEmitter from './eventEmitter';
 
 export default class View extends EventEmitter {
@@ -25,7 +27,7 @@ export default class View extends EventEmitter {
     this.craftBtn.addEventListener('click', this.handleCraftBtn.bind(this));
     this.form.addEventListener('submit', this.handleFormSubmit.bind(this));
 
-    this.resetBtn.addEventListener('click', this.handleResetBtn)
+    this.resetBtn.addEventListener('click', this.handleResetBtn);
   }
 
   addItem(item, container) {
@@ -67,6 +69,7 @@ export default class View extends EventEmitter {
   checkDroppedRecipe() {
     const recipeList = this.tableRecipe.childNodes;
     if (recipeList.length) {
+      // eslint-disable-next-line no-alert
       alert('Можно добавить только один рецепт');
       return false;
     }
@@ -76,7 +79,6 @@ export default class View extends EventEmitter {
   dropIngredients(ev) {
     ev.preventDefault();
     const data = ev.dataTransfer.getData('id');
-    console.log('ev target', ev.target);
     ev.target.appendChild(document.getElementById(data));
   }
 
@@ -93,6 +95,7 @@ export default class View extends EventEmitter {
       // вызвать isEqualToRecipe(recipeId, itemsArr) из модели
       this.emit('craft', { recipeId, ingredientsNames });
     } else {
+      // eslint-disable-next-line no-alert
       alert('Выберите рецепт');
     }
   }
@@ -123,7 +126,10 @@ export default class View extends EventEmitter {
     const inputList = Array.from(document.querySelectorAll('.ingredient'));
     const valueList = inputList.map((input) => input.value);
     const correctValueList = valueList.filter((v) => Boolean(v));
-    const newIngredients = correctValueList.map((ing) => ({ id: Date.now() + Math.random(), name: ing }));
+    const newIngredients = correctValueList.map((ing) => ({
+      id: Date.now() + Math.random(),
+      name: ing,
+    }));
 
     const ingredientsObj = correctValueList.reduce((obj, cur, i) => {
       const key = i + 1;
@@ -137,14 +143,14 @@ export default class View extends EventEmitter {
       ingredients: { ...ingredientsObj },
     };
 
-    console.log('newIngredients', newIngredients);
     this.emit('createRecipe', { newRecipe, newIngredients });
     this.removeValues(inputList, nameInput);
   }
 
   handleResetBtn() {
-    localStorage.removeItem('recipeList')
-    localStorage.removeItem('ingredientsList')
-    location.reload()
+    localStorage.removeItem('recipeList');
+    localStorage.removeItem('ingredientsList');
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
   }
 }
