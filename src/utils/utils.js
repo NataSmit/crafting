@@ -72,3 +72,35 @@ export const ingredientsForRender = [
   ...initialItems,
   ...(JSON.parse(localStorage.getItem('ingredientsList')) || []),
 ];
+
+export function findItemInTheList(ItemId, arr) {
+  const item = arr.find(
+    (recipe) => String(recipe.id) === String(ItemId),
+  );
+
+  return item;
+}
+
+export function showIngredientsList(recipeObj) {
+  const correctIngredients = Object.values(recipeObj.ingredients);
+  alert(`Для создания предмета Вам необходимы следующие предметы: ${correctIngredients}`);
+}
+
+export function clearInputsValues(arr, nameInput) {
+  const newArr = [...arr, nameInput];
+  newArr.forEach((input) => {
+    input.value = '';
+  });
+}
+
+export function handleLocalStorage(newRecipe, newIngredients) {
+  const { ingredients, recipes } = getDataFromLocalStorage();
+  if (ingredients && recipes) {
+    saveToLocalStorage(
+      [...recipes, newRecipe],
+      [...ingredients, ...newIngredients],
+    );
+  } else {
+    saveToLocalStorage([newRecipe], newIngredients);
+  }
+}

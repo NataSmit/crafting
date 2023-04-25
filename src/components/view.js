@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable class-methods-use-this */
 import EventEmitter from './eventEmitter';
+import { clearInputsValues } from '../utils/utils';
 
 export default class View extends EventEmitter {
   constructor() {
@@ -15,19 +16,20 @@ export default class View extends EventEmitter {
     this.form = document.querySelector('.newRecipe__form');
     this.resetBtn = document.querySelector('.table__reset-btn');
 
+    this.recipeListContainer.addEventListener('dragover', this.dragover);
+    this.recipeListContainer.addEventListener('drop', this.dropRecipe.bind(this));
+
     this.tableItems.addEventListener('dragover', this.dragover);
-    this.tableItems.addEventListener('drop', this.dropIngredients);
+    this.tableItems.addEventListener('drop', this.dropIngredients.bind(this));
 
     this.itemList.addEventListener('dragover', this.dragover);
-    this.itemList.addEventListener('drop', this.dropIngredients);
+    this.itemList.addEventListener('drop', this.dropIngredients.bind(this));
 
     this.tableRecipe.addEventListener('dragover', this.dragover);
     this.tableRecipe.addEventListener('drop', this.dropRecipe.bind(this));
 
     this.craftBtn.addEventListener('click', this.handleCraftBtn.bind(this));
-    this.form.addEventListener('submit', this.handleFormSubmit.bind(this));
-
-    this.resetBtn.addEventListener('click', this.handleResetBtn);
+    this.form.addEventListener('submit', this.handleNewRecipeFormSubmit.bind(this));
   }
 
   addItem(item, container) {
@@ -55,15 +57,18 @@ export default class View extends EventEmitter {
   drag(ev) {
     const itemId = ev.target.id;
     ev.dataTransfer.setData('id', itemId);
+    console.log('drag id', itemId);
   }
 
   dropRecipe(ev) {
     ev.preventDefault();
-    const data = ev.dataTransfer.getData('id');
-    const checkResult = this.checkDroppedRecipe();
-    if (checkResult) {
-      ev.target.appendChild(document.getElementById(data));
-    }
+    const recipeId = ev.dataTransfer.getData('id');
+    const eTarget = ev.target;
+    this.emit('dropRecipe', { recipeId, eTarget });
+  }
+
+  appendItem(id, container) {
+    container.appendChild(document.getElementById(id));
   }
 
   checkDroppedRecipe() {
@@ -78,8 +83,9 @@ export default class View extends EventEmitter {
 
   dropIngredients(ev) {
     ev.preventDefault();
-    const data = ev.dataTransfer.getData('id');
-    ev.target.appendChild(document.getElementById(data));
+    const ingredientId = ev.dataTransfer.getData('id');
+    const eTarget = ev.target;
+    this.emit('dropIngredients', { ingredientId, eTarget });
   }
 
   dragover(e) {
@@ -112,45 +118,12 @@ export default class View extends EventEmitter {
     });
   }
 
-  removeValues(arr, nameInput) {
-    const newArr = [...arr, nameInput];
-    newArr.forEach((input) => {
-      input.value = '';
-    });
-  }
-
-  handleFormSubmit(e) {
+  handleNewRecipeFormSubmit(e) {
     e.preventDefault();
     const nameInput = document.querySelector('.name');
     const name = nameInput.value;
     const inputList = Array.from(document.querySelectorAll('.ingredient'));
-    const valueList = inputList.map((input) => input.value);
-    const correctValueList = valueList.filter((v) => Boolean(v));
-    const newIngredients = correctValueList.map((ing) => ({
-      id: Date.now() + Math.random(),
-      name: ing,
-    }));
-
-    const ingredientsObj = correctValueList.reduce((obj, cur, i) => {
-      const key = i + 1;
-      obj[key] = cur;
-      return obj;
-    }, {});
-
-    const newRecipe = {
-      name,
-      id: Date.now() + Math.random(),
-      ingredients: { ...ingredientsObj },
-    };
-
-    this.emit('createRecipe', { newRecipe, newIngredients });
-    this.removeValues(inputList, nameInput);
-  }
-
-  handleResetBtn() {
-    localStorage.removeItem('recipeList');
-    localStorage.removeItem('ingredientsList');
-    // eslint-disable-next-line no-restricted-globals
-    location.reload();
+    this.emit('createRecipe', { inputList, name });
+    clearInputsValues(inputList, nameInput);
   }
 }

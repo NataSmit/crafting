@@ -1,4 +1,3 @@
-import './index.html';
 import './index.css';
 import View from './components/view';
 import Model from './components/model';

@@ -1,12 +1,18 @@
-import { getDataFromLocalStorage, saveToLocalStorage } from '../utils/utils';
+import {
+  findItemInTheList, showIngredientsList,
+} from '../utils/utils';
 
 export default class Controller {
   constructor(model, view) {
     this.model = model;
     this.view = view;
 
+    this.view.resetBtn.addEventListener('click', this.handleResetBtn);
+
     view.on('craft', this.craft.bind(this));
     view.on('createRecipe', this.createRecipe.bind(this));
+    view.on('dropRecipe', this.dropRecipe.bind(this));
+    view.on('dropIngredients', this.dropIngredients.bind(this));
   }
 
   craft({ recipeId, ingredientsNames }) {
@@ -25,24 +31,43 @@ export default class Controller {
     }
   }
 
-  createRecipe({ newRecipe, newIngredients }) {
-    const { ingredients, recipes } = getDataFromLocalStorage();
-    this.model.addToRecipeList(newRecipe);
-    this.model.addToItemList(newIngredients);
-    const newRecipeArrLS = [];
-    newRecipeArrLS.push(newRecipe);
-    const newIngredientsLS = [];
-    newIngredientsLS.push(...newIngredients);
-    if (ingredients && recipes) {
-      saveToLocalStorage(
-        [...recipes, newRecipe],
-        [...ingredients, ...newIngredients],
-      );
-    } else {
-      saveToLocalStorage([newRecipe], newIngredients);
-    }
-
+  createRecipe({ inputList, name }) {
+    const { newRecipe, newIngredients } = this.model.createNewRecipe(inputList, name);
     this.view.addItem(newRecipe, this.view.recipeListContainer);
     this.view.renderItems(newIngredients, this.view.itemList);
+  }
+
+  dropRecipe({ recipeId, eTarget }) {
+    const obj = findItemInTheList(recipeId, this.model.recipeList);
+    if (obj) {
+      if (eTarget.className === 'table__recipe-list') {
+        const checkResult = this.view.checkDroppedRecipe();
+        if (checkResult) {
+          this.view.appendItem(obj.id, eTarget);
+          showIngredientsList(obj);
+        }
+      } else {
+        this.view.appendItem(obj.id, eTarget);
+      }
+    } else {
+      alert('Это область только для чертежа');
+    }
+  }
+
+  dropIngredients({ ingredientId, eTarget }) {
+    const ingredient = findItemInTheList(ingredientId, this.model.itemList);
+
+    if (ingredient) {
+      this.view.appendItem(ingredient.id, eTarget);
+    } else {
+      alert('Это область только для частей');
+    }
+  }
+
+  handleResetBtn() {
+    localStorage.removeItem('recipeList');
+    localStorage.removeItem('ingredientsList');
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
   }
 }

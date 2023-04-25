@@ -96,6 +96,8 @@ body {
 .recipe__list {
   flex-direction: row;
   flex-wrap: wrap;
+  min-height: 50px;
+  width: 100%;
 }
 
 
@@ -176,6 +178,7 @@ body {
 .title {
   font-size: 20px;
   margin: 0 0 10px 0;
+  background-color: rgb(243, 231, 231);
 }
 
 .table__recipe-list {
