@@ -1,9 +1,10 @@
+import { ingredientsForRender, recipesForRender } from '../data/data';
 import { handleLocalStorage } from '../utils/utils';
 
 export default class Model {
-  constructor(itemList, recipeList, result = []) {
-    this.itemList = itemList;
-    this.recipeList = recipeList;
+  constructor(result = []) {
+    this.itemList = ingredientsForRender;
+    this.recipeList = recipesForRender;
     this.resultList = result;
   }
 
@@ -47,6 +48,7 @@ export default class Model {
 
     const ingredientsObj = correctValueList.reduce((obj, cur, i) => {
       const key = i + 1;
+      // eslint-disable-next-line no-param-reassign
       obj[key] = cur;
       return obj;
     }, {});

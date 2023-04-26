@@ -32,7 +32,7 @@ export default class View extends EventEmitter {
     this.form.addEventListener('submit', this.handleNewRecipeFormSubmit.bind(this));
   }
 
-  addItem(item, container) {
+  createNode(item, container) {
     const listItem = document.createElement('li');
     listItem.classList.add('item');
     listItem.setAttribute('id', `${item.id}`);
@@ -46,18 +46,17 @@ export default class View extends EventEmitter {
 
   renderItems(itemArr, container) {
     itemArr.forEach((element) => {
-      this.addItem(element, container);
+      this.createNode(element, container);
     });
   }
 
   addToResult(createdItem) {
-    this.addItem(createdItem, this.result);
+    this.createNode(createdItem, this.result);
   }
 
   drag(ev) {
     const itemId = ev.target.id;
     ev.dataTransfer.setData('id', itemId);
-    console.log('drag id', itemId);
   }
 
   dropRecipe(ev) {
@@ -74,7 +73,6 @@ export default class View extends EventEmitter {
   checkDroppedRecipe() {
     const recipeList = this.tableRecipe.childNodes;
     if (recipeList.length) {
-      // eslint-disable-next-line no-alert
       alert('Можно добавить только один рецепт');
       return false;
     }
@@ -98,10 +96,8 @@ export default class View extends EventEmitter {
       const recipeId = this.tableRecipe.childNodes[0].id;
       const ingredients = Array.from(this.tableItems.childNodes);
       const ingredientsNames = ingredients.map((i) => i.getAttribute('name'));
-      // вызвать isEqualToRecipe(recipeId, itemsArr) из модели
       this.emit('craft', { recipeId, ingredientsNames });
     } else {
-      // eslint-disable-next-line no-alert
       alert('Выберите рецепт');
     }
   }

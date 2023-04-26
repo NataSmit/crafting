@@ -26,14 +26,13 @@ export default class Controller {
       this.view.removeRecipe();
       this.view.removeIngredients();
     } else {
-      // eslint-disable-next-line no-alert
       alert('составные части выбраны не верно/не полностью');
     }
   }
 
   createRecipe({ inputList, name }) {
     const { newRecipe, newIngredients } = this.model.createNewRecipe(inputList, name);
-    this.view.addItem(newRecipe, this.view.recipeListContainer);
+    this.view.createNode(newRecipe, this.view.recipeListContainer);
     this.view.renderItems(newIngredients, this.view.itemList);
   }
 
@@ -64,10 +63,16 @@ export default class Controller {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   handleResetBtn() {
     localStorage.removeItem('recipeList');
     localStorage.removeItem('ingredientsList');
     // eslint-disable-next-line no-restricted-globals
     location.reload();
+  }
+
+  render() {
+    this.view.renderItems(this.model.itemList, this.view.itemList);
+    this.view.renderItems(this.model.recipeList, this.view.recipeListContainer);
   }
 }
